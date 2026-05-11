@@ -1,31 +1,40 @@
 const nodemailer = require("nodemailer");
 
-console.log("📧 Email Config:", {
-  host: process.env.MAILTRAP_HOST,
-  port: process.env.MAILTRAP_PORT,
-  user: process.env.MAILTRAP_USER ? "✅ SET" : "❌ NOT SET",
-  pass: process.env.MAILTRAP_PASS ? "✅ SET" : "❌ NOT SET",
-});
+// استخدم Gmail أو Mailtrap
+const emailProvider = process.env.EMAIL_PROVIDER || "gmail";
 
-// create transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.MAILTRAP_HOST,
-  port: Number(process.env.MAILTRAP_PORT),
-  secure: false,
-  connectionTimeout: 5000, // 5 ثواني
-  socketTimeout: 5000, // 5 ثواني
-  auth: {
-    user: process.env.MAILTRAP_USER,
-    pass: process.env.MAILTRAP_PASS,
-  },
-});
+let transporter;
+
+if (emailProvider === "gmail") {
+  console.log("📧 Using GMAIL for emails");
+  transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS, // استخدم App Password
+    },
+  });
+} else {
+  console.log("📧 Using MAILTRAP for emails");
+  transporter = nodemailer.createTransport({
+    host: process.env.MAILTRAP_HOST,
+    port: Number(process.env.MAILTRAP_PORT),
+    secure: false,
+    connectionTimeout: 5000,
+    socketTimeout: 5000,
+    auth: {
+      user: process.env.MAILTRAP_USER,
+      pass: process.env.MAILTRAP_PASS,
+    },
+  });
+}
 
 // verify smtp connection
 transporter.verify((error, success) => {
   if (error) {
-    console.log("SMTP ERROR:", error);
+    console.log("❌ SMTP ERROR:", error);
   } else {
-    console.log("SMTP SERVER IS READY");
+    console.log("✅ SMTP SERVER IS READY");
   }
 });
 
