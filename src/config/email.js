@@ -3,11 +3,21 @@ const nodemailer = require("nodemailer");
 // create transporter
 const transporter = nodemailer.createTransport({
   host: process.env.MAILTRAP_HOST,
-  port: process.env.MAILTRAP_PORT,
+  port: Number(process.env.MAILTRAP_PORT),
+  secure: false,
   auth: {
     user: process.env.MAILTRAP_USER,
     pass: process.env.MAILTRAP_PASS,
   },
+});
+
+// verify smtp connection
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("SMTP ERROR:", error);
+  } else {
+    console.log("SMTP SERVER IS READY");
+  }
 });
 
 // function to send verification email
