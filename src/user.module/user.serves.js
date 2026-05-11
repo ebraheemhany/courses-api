@@ -6,6 +6,8 @@ const { sendVerificationEmail, sendOtpEmail } = require("../config/email");
 const { time } = require("console");
 class userService {
   async register(data) {
+    console.log("🔥 REGISTER STARTED");
+
     const userExist = await userRepo.findByEmail(data.email);
     if (userExist) {
       const err = new Error("user already exist");
@@ -23,10 +25,14 @@ class userService {
       isVerified: false,
     });
 
-    // ✅ ابعت الإيميل في الـ Background بدون await
-    sendVerificationEmail(createUser.email, verificationToken)
-      .then(() => console.log("✅ Email sent to:", createUser.email))
-      .catch((err) => console.error("❌ Email error:", err.message));
+    console.log("🔥 USER CREATED");
+
+    try {
+      await sendVerificationEmail(createUser.email, verificationToken);
+      console.log("✅ EMAIL SENT");
+    } catch (err) {
+      console.log("❌ EMAIL ERROR:", err);
+    }
 
     return {
       message:
