@@ -100,7 +100,7 @@ const sendVerificationEmail = async (email, token) => {
 const sendOtpEmail = async (email, otp) => {
   try {
     console.log(`📨 Attempting to send OTP email to: ${email}`);
-
+ 
     const info = await transporter.sendMail({
       from: '"My App" <no-reply@myapp.com>',
       to: email,
