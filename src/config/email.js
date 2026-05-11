@@ -12,6 +12,8 @@ const transporter = nodemailer.createTransport({
   host: process.env.MAILTRAP_HOST,
   port: Number(process.env.MAILTRAP_PORT),
   secure: false,
+  connectionTimeout: 5000, // 5 ثواني
+  socketTimeout: 5000, // 5 ثواني
   auth: {
     user: process.env.MAILTRAP_USER,
     pass: process.env.MAILTRAP_PASS,

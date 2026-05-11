@@ -25,15 +25,13 @@ class userService {
       isVerified: false,
     });
 
-    // ✅ ابعت الإيميل مع await للتأكد من وصوله
+    // ✅ أرسل البريد في الخلفية بدون الانتظار
     console.log("🔥 USER CREATED");
-    try {
-      await sendVerificationEmail(createUser.email, verificationToken);
-      console.log("✅ EMAIL SENT");
-    } catch (err) {
-      console.error("❌ Verification email failed:", err.message);
-      // لا نرفع error هنا حتى لو فشل البريد
-    }
+    sendVerificationEmail(createUser.email, verificationToken)
+      .then(() => console.log("✅ EMAIL SENT"))
+      .catch((err) =>
+        console.error("❌ Verification email failed:", err.message),
+      );
 
     return {
       message:
