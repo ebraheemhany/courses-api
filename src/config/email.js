@@ -10,14 +10,25 @@ console.log("📧 Email Config:", {
 // create transporter
 const transporter = nodemailer.createTransport({
   host: process.env.MAILTRAP_HOST,
-  port: process.env.MAILTRAP_PORT,
+  port: Number(process.env.MAILTRAP_PORT),
+  secure: false,
   auth: {
     user: process.env.MAILTRAP_USER,
     pass: process.env.MAILTRAP_PASS,
   },
 });
 
+// verify smtp connection
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("SMTP ERROR:", error);
+  } else {
+    console.log("SMTP SERVER IS READY");
+  }
+});
+
 // function to send verification email
+
 const sendVerificationEmail = async (email, token) => {
   const verifyUrl = `${process.env.BASE_URL}/api/users/verify-email/${token}`;
 
@@ -50,6 +61,29 @@ const sendVerificationEmail = async (email, token) => {
     throw error;
   }
 };
+
+// const sendVerificationEmail = async (email, token) => {
+//   const verifyUrl = `${process.env.BASE_URL}/api/users/verify-email/${token}`;
+//   await transporter.sendMail({
+//     from: '"My App" <no-reply@myapp.com>',
+//     to: email,
+//     subject: "Verify Your Email",
+//     html: `
+//       <div style="font-family: Arial; padding: 20px;">
+//         <h2>Welcome! 👋</h2>
+//         <p>Please verify your email by clicking the button below:</p>
+//         <a href="${verifyUrl}"
+//            style="background:#4ADE80; color:white; padding:12px 24px;
+//                   text-decoration:none; border-radius:6px; display:inline-block;">
+//           Verify Email
+//         </a>
+//         <p style="color:#999; margin-top:16px;">
+//           This link expires in 24 hours.
+//         </p>
+//       </div>
+//     `,
+//   });
+// };
 
 // function to send otp with email
 const sendOtpEmail = async (email, otp) => {

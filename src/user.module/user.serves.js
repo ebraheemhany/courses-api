@@ -6,6 +6,8 @@ const { sendVerificationEmail, sendOtpEmail } = require("../config/email");
 const { time } = require("console");
 class userService {
   async register(data) {
+    console.log("🔥 REGISTER STARTED");
+
     const userExist = await userRepo.findByEmail(data.email);
     if (userExist) {
       const err = new Error("user already exist");
@@ -24,9 +26,10 @@ class userService {
     });
 
     // ✅ ابعت الإيميل مع await للتأكد من وصوله
+    console.log("🔥 USER CREATED");
     try {
       await sendVerificationEmail(createUser.email, verificationToken);
-      console.log("✅ Verification email workflow completed");
+      console.log("✅ EMAIL SENT");
     } catch (err) {
       console.error("❌ Verification email failed:", err.message);
       // لا نرفع error هنا حتى لو فشل البريد
