@@ -23,10 +23,14 @@ class userService {
       isVerified: false,
     });
 
-    // ✅ ابعت الإيميل في الـ Background بدون await
-    sendVerificationEmail(createUser.email, verificationToken)
-      .then(() => console.log("✅ Email sent to:", createUser.email))
-      .catch((err) => console.error("❌ Email error:", err.message));
+    // ✅ ابعت الإيميل مع await للتأكد من وصوله
+    try {
+      await sendVerificationEmail(createUser.email, verificationToken);
+      console.log("✅ Verification email workflow completed");
+    } catch (err) {
+      console.error("❌ Verification email failed:", err.message);
+      // لا نرفع error هنا حتى لو فشل البريد
+    }
 
     return {
       message:
