@@ -6,19 +6,16 @@ const { sendVerificationEmail, sendOtpEmail } = require("../config/email");
 const { time } = require("console");
 class userService {
   async register(data) {
-    // check by email if user exist
     const userExist = await userRepo.findByEmail(data.email);
     if (userExist) {
-      throw new Error("user already exist");
+      const err = new Error("user already exist");
+      err.statusCode = 409;
+      throw err;
     }
 
-    // hash password
     const hashPassword = await bcrypt.hash(data.password, 10);
-
-    // 3. إنشاء token عشوائي
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    // create user
     const createUser = await userRepo.create({
       ...data,
       password: hashPassword,
@@ -26,7 +23,10 @@ class userService {
       isVerified: false,
     });
 
-    await sendVerificationEmail(createUser.email, verificationToken);
+    // ✅ ابعت الإيميل في الـ Background بدون await
+    sendVerificationEmail(createUser.email, verificationToken)
+      .then(() => console.log("✅ Email sent to:", createUser.email))
+      .catch((err) => console.error("❌ Email error:", err.message));
 
     return {
       message:
