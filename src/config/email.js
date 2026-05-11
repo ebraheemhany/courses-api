@@ -21,28 +21,47 @@ transporter.verify((error, success) => {
 });
 
 // function to send verification email
+
+
 const sendVerificationEmail = async (email, token) => {
+  console.log("Sending verification email...");
+
   const verifyUrl = `${process.env.BASE_URL}/api/users/verify-email/${token}`;
+
   await transporter.sendMail({
     from: '"My App" <no-reply@myapp.com>',
     to: email,
     subject: "Verify Your Email",
     html: `
-      <div style="font-family: Arial; padding: 20px;">
-        <h2>Welcome! 👋</h2>
-        <p>Please verify your email by clicking the button below:</p>
-        <a href="${verifyUrl}"
-           style="background:#4ADE80; color:white; padding:12px 24px;
-                  text-decoration:none; border-radius:6px; display:inline-block;">
-          Verify Email
-        </a>
-        <p style="color:#999; margin-top:16px;">
-          This link expires in 24 hours.
-        </p>
-      </div>
+      <h1>Hello</h1>
     `,
   });
+
+  console.log("Email sent successfully");
 };
+
+// const sendVerificationEmail = async (email, token) => {
+//   const verifyUrl = `${process.env.BASE_URL}/api/users/verify-email/${token}`;
+//   await transporter.sendMail({
+//     from: '"My App" <no-reply@myapp.com>',
+//     to: email,
+//     subject: "Verify Your Email",
+//     html: `
+//       <div style="font-family: Arial; padding: 20px;">
+//         <h2>Welcome! 👋</h2>
+//         <p>Please verify your email by clicking the button below:</p>
+//         <a href="${verifyUrl}"
+//            style="background:#4ADE80; color:white; padding:12px 24px;
+//                   text-decoration:none; border-radius:6px; display:inline-block;">
+//           Verify Email
+//         </a>
+//         <p style="color:#999; margin-top:16px;">
+//           This link expires in 24 hours.
+//         </p>
+//       </div>
+//     `,
+//   });
+// };
 
 // function to send otp with email
 const sendOtpEmail = async (email, otp) => {
