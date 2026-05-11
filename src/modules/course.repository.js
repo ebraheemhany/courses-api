@@ -21,8 +21,32 @@ class CourseRepo {
     return Course.findByIdAndDelete(id);
   }
 
-  count() {
-    return Course.countDocuments();
+  //  filter and search and pagination methods
+  findWithQuery(filter = {}, skip = 0, limit = 10) {
+    return Course.find(filter).skip(skip).limit(limit);
+  }
+
+  buildFilter(query) {
+    const filter = {};
+    // search by title
+    if (query.title) {
+      filter.title = {
+        $regex: query.title,
+        $options: "i",
+      };
+    }
+    // filter by price range
+    if (query.minPrice || query.maxPrice) {
+      filter.price = {
+        ...(query.minPrice && { $gte: Number(query.minPrice) }),
+        ...(query.maxPrice && { $lte: Number(query.maxPrice) }),
+      };
+    }
+    return filter;
+  }
+
+  count(filter = {}) {
+    return Course.countDocuments(filter);
   }
 }
 

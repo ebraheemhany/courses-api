@@ -14,7 +14,7 @@ class CourseController {
 
   async create(req, res) {
     const course = await CourseService.createCourse(req.body);
-    apiResponse(res, 200, status.SUCCESS, null, { course });
+    apiResponse(res, 201, status.SUCCESS, null, { course });
   }
 
   async update(req, res) {
@@ -26,6 +26,11 @@ class CourseController {
     const result = await CourseService.deleteCourse(req.params.id);
     apiResponse(res, 200, status.SUCCESS, null, "Course deleted");
   }
-}
 
+  // search and filter
+  async searchAndFilter(req, res) {
+    const courses = await CourseService.searchAndFilterCourses(req.query);
+    apiResponse(res, 200, status.SUCCESS, null, courses);
+  }
+}
 module.exports = new CourseController();

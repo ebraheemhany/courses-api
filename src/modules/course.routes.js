@@ -5,6 +5,7 @@ const courseSchema = require("../../validation/courseValidation");
 const asyncHandler = require("../../middleware/asyncHandler");
 
 router.get("/", asyncHandler(controller.getAll));
+router.get("/search", asyncHandler(controller.searchAndFilter));
 router.get("/:id", asyncHandler(controller.getOne));
 router.post("/", validate(courseSchema), asyncHandler(controller.create));
 router.patch(
