@@ -7,6 +7,7 @@ const apiResponse = require("../utailts/apiResponse");
 const passport = require("./config/passport");
 const app = express();
 app.use(express.json());
+app.set("trust proxy", 1);
 // google auth passport middleware
 app.use(passport.initialize());
 app.use("/api/courses", courseRoutes);
